@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.Net.Http.Headers;
 using BlazorApp.Data;
+using TodoItemManagement;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +11,12 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 // added to access webapi
-builder.Services.AddHttpClient();
+builder.Services.AddHttpClient<ITodoItemService,TodoItemService>("todoAPI", httpClient =>
+{
+    httpClient.BaseAddress = new Uri("http://localhost:5097/");
+    httpClient.DefaultRequestHeaders.Add( HeaderNames.Accept,"application/json");
+    httpClient.DefaultRequestHeaders.Add( HeaderNames.UserAgent,"HttpRequestsSample");
+});
 
 var app = builder.Build();
 

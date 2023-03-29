@@ -6,6 +6,6 @@ public class TodoItem
     public long Id { get; set; }
     [JsonPropertyName("name")]
     public string? Name { get; set; }
-    [JsonPropertyName("isCompleted")]
+    [JsonPropertyName("isComplete")]
     public bool IsComplete { get; set; } = false;
 }

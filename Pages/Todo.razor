@@ -1,13 +1,11 @@
 ﻿@page "/todo"
 
-@using System.Text.Json
-@using System.Text.Json.Serialization
-@inject IHttpClientFactory ClientFactory
+@inject ITodoItemService todoItemService
 
-<h3>Todo (@todoItems.Count(todo => !todo.IsComplete))</h3>
+<h3>Todo </h3>
 
 <input placeholder="Something todo" @bind="newTodo" />
-<button @onclick="AddTodo">Add todo</button>
+<button>Add todo</button>
 <br><br>
 
 <div>
@@ -24,52 +22,33 @@
 
 
 @code {
-    private const string webApiUri = "http://localhost:5097/api/todoitems";
-    private IEnumerable<TodoItem> todoItems = Array.Empty<TodoItem>();
+
+    private List<TodoItem> todoItems = new List<TodoItem>();
+
     private string? newTodo;
 
-    private bool getTodoItemError;
     private bool shouldRender;
     protected override bool ShouldRender() => shouldRender;
 
     protected override async Task OnInitializedAsync()
     {
-        var request = new HttpRequestMessage(HttpMethod.Get,webApiUri);
-        request.Headers.Add("Accept", "application/json");
-        request.Headers.Add("User-Agent", "HttpClientFactory-Sample");
+        var itemList = (await todoItemService.GetTodoItems()).ToList();
 
-        var client = ClientFactory.CreateClient();
-        var response = await client.SendAsync(request);
+        System.Console.Write("fetching todo items...");
 
-        if (response.IsSuccessStatusCode)
+        if (itemList == null)
         {
-            using var responseStream = await response.Content.ReadAsStreamAsync();
-            todoItems = await JsonSerializer.DeserializeAsync<IEnumerable<TodoItem>>(responseStream);
+            System.Console.WriteLine(" nothing...");
+            todoItems.Clear();
         }
         else
         {
-            getTodoItemError = true;
+            System.Console.Write(" something: ");
+            System.Console.WriteLine(itemList.Count());
+            todoItems = itemList;
         }
 
         shouldRender = true;
     }
-
-    private void AddTodo()
-    {
-        if (!string.IsNullOrWhiteSpace(newTodo))
-        {
-            
-
-
-
-            //todoItems.Add(new TodoItem { Id = maxId, Name = newTodo });
-            newTodo = string.Empty;
-        }
-    }
-
-    private void CompleteTodo(long id)
-    {
-    }
-
     
 }
