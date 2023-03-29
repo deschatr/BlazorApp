@@ -10,11 +10,12 @@
 
 <div>
     <ul>
-@foreach (var todo in todoItems)
+@foreach (var todoItem in todoItems)
     {
         <li>
-            <input @bind="todo.Name" />
-            <input type="checkbox" @bind="todo.IsComplete" />
+            <input @bind="todoItem.Name" />
+            <input type="checkbox" @onchange="( async () => await ToggleTodoItem(todoItem) )" checked="@todoItem.IsComplete" />
+            <button @onclick="( async () => await DeleteTodoItem(todoItem) )"> Delete </button>
         </li>
     }
     </ul>
@@ -35,13 +36,9 @@
         var itemList = (await todoItemService.GetTodoItems()).ToList();
 
         if (itemList == null)
-        {
             todoItems.Clear();
-        }
         else
-        {
             todoItems = itemList;
-        }
 
         shouldRender = true;
     }
@@ -55,13 +52,38 @@
         var itemList = (await todoItemService.AddTodoItem(newTodoItem)).ToList();
 
         if (itemList == null)
-        {
             todoItems.Clear();
-        }
         else
-        {
             todoItems = itemList;
-        }
+
+    }
+
+    private async Task DeleteTodoItem(TodoItem todoItem)
+    {
+        TodoItem newTodoItem = new TodoItem();
+        newTodoItem.Name = newTodo;
+        newTodoItem.IsComplete = false;
+
+        var itemList = (await todoItemService.DeleteTodoItem(todoItem)).ToList();
+
+        if (itemList == null)
+            todoItems.Clear();
+        else
+            todoItems = itemList;
+    }
+
+        private async Task ToggleTodoItem(TodoItem todoItem)
+    {
+        TodoItem newTodoItem = new TodoItem();
+        newTodoItem.Name = newTodo;
+        newTodoItem.IsComplete = false;
+
+        var itemList = (await todoItemService.SetTodoItem(todoItem)).ToList();
+
+        if (itemList == null)
+            todoItems.Clear();
+        else
+            todoItems = itemList;
 
     }
     
