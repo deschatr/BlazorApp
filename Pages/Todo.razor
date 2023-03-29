@@ -2,7 +2,7 @@
 
 @inject ITodoItemService todoItemService
 
-<h3>Todo </h3>
+<h3>Todo (</h3>
 
 <input placeholder="Something todo" @bind="newTodo" />
 <button>Add todo</button>
@@ -34,17 +34,12 @@
     {
         var itemList = (await todoItemService.GetTodoItems()).ToList();
 
-        System.Console.Write("fetching todo items...");
-
         if (itemList == null)
         {
-            System.Console.WriteLine(" nothing...");
             todoItems.Clear();
         }
         else
         {
-            System.Console.Write(" something: ");
-            System.Console.WriteLine(itemList.Count());
             todoItems = itemList;
         }
 
