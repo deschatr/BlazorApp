@@ -1,0 +1,75 @@
+﻿@page "/todo"
+
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@inject IHttpClientFactory ClientFactory
+
+<h3>Todo (@todoItems.Count(todo => !todo.IsComplete))</h3>
+
+<input placeholder="Something todo" @bind="newTodo" />
+<button @onclick="AddTodo">Add todo</button>
+<br><br>
+
+<div>
+    <ul>
+@foreach (var todo in todoItems)
+    {
+        <li>
+            <input @bind="todo.Name" />
+            <input type="checkbox" @bind="todo.IsComplete" />
+        </li>
+    }
+    </ul>
+</div>
+
+
+@code {
+    private const string webApiUri = "http://localhost:5097/api/todoitems";
+    private IEnumerable<TodoItem> todoItems = Array.Empty<TodoItem>();
+    private string? newTodo;
+
+    private bool getTodoItemError;
+    private bool shouldRender;
+    protected override bool ShouldRender() => shouldRender;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get,webApiUri);
+        request.Headers.Add("Accept", "application/json");
+        request.Headers.Add("User-Agent", "HttpClientFactory-Sample");
+
+        var client = ClientFactory.CreateClient();
+        var response = await client.SendAsync(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            using var responseStream = await response.Content.ReadAsStreamAsync();
+            todoItems = await JsonSerializer.DeserializeAsync<IEnumerable<TodoItem>>(responseStream);
+        }
+        else
+        {
+            getTodoItemError = true;
+        }
+
+        shouldRender = true;
+    }
+
+    private void AddTodo()
+    {
+        if (!string.IsNullOrWhiteSpace(newTodo))
+        {
+            
+
+
+
+            //todoItems.Add(new TodoItem { Id = maxId, Name = newTodo });
+            newTodo = string.Empty;
+        }
+    }
+
+    private void CompleteTodo(long id)
+    {
+    }
+
+    
+}
