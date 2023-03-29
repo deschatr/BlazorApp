@@ -5,7 +5,7 @@
 <h3>Todo @todoItems.Count(todo => !todo.IsComplete)</h3>
 
 <input placeholder="Something todo" @bind="newTodo" />
-<button>Add todo</button>
+<button @onclick="AddTodoItem"> Add todo</button>
 <br><br>
 
 <div>
@@ -33,6 +33,26 @@
     protected override async Task OnInitializedAsync()
     {
         var itemList = (await todoItemService.GetTodoItems()).ToList();
+
+        if (itemList == null)
+        {
+            todoItems.Clear();
+        }
+        else
+        {
+            todoItems = itemList;
+        }
+
+        shouldRender = true;
+    }
+
+    private async Task AddTodoItem()
+    {
+        TodoItem newTodoItem = new TodoItem();
+        newTodoItem.Name = newTodo;
+        newTodoItem.IsComplete = false;
+
+        var itemList = (await todoItemService.AddTodoItem(newTodoItem)).ToList();
 
         if (itemList == null)
         {
