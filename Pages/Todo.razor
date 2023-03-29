@@ -2,7 +2,7 @@
 
 @inject ITodoItemService todoItemService
 
-<h3>Todo (</h3>
+<h3>Todo @todoItems.Count(todo => !todo.IsComplete)</h3>
 
 <input placeholder="Something todo" @bind="newTodo" />
 <button>Add todo</button>
