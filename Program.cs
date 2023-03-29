@@ -4,18 +4,23 @@ using Microsoft.Net.Http.Headers;
 using BlazorApp.Data;
 using TodoItemManagement;
 
+
+const string baseAddress = "http://localhost:5097/";
+//const string baseAddress =  "https://appservice.azurewebsites.net/";
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
-// added to access webapi
+
+// creates data service for todo items
 builder.Services.AddHttpClient<ITodoItemService,TodoItemService>("todoAPI", httpClient =>
 {
-    httpClient.BaseAddress = new Uri("http://localhost:5097/");
-    httpClient.DefaultRequestHeaders.Add( HeaderNames.Accept,"application/json");
-    httpClient.DefaultRequestHeaders.Add( HeaderNames.UserAgent,"HttpRequestsSample");
+    httpClient.BaseAddress = new Uri(baseAddress);
+    httpClient.DefaultRequestHeaders.Add(HeaderNames.Accept,"application/json");
+    httpClient.DefaultRequestHeaders.Add(HeaderNames.UserAgent,"BlazorApp/0.2");
 });
 
 var app = builder.Build();
