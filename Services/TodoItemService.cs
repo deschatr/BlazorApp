@@ -7,6 +7,8 @@ public class TodoItemService : ITodoItemService
     private readonly HttpClient httpClient;
     private const string endPoint = "api/TodoItems";
 
+    
+
     public TodoItemService(HttpClient httpClient)
     {
         this.httpClient = httpClient;
@@ -20,23 +22,20 @@ public class TodoItemService : ITodoItemService
 
     public async Task<IEnumerable<TodoItem>> AddTodoItem( TodoItem todoItem )
     {
-        var result = await httpClient.PostAsJsonAsync<TodoItem>(endPoint,todoItem);
+        var response = await httpClient.PostAsJsonAsync<TodoItem>(endPoint, todoItem);
         return await GetTodoItems();
     }
 
-    // to be implemented later...
-    public async Task<IEnumerable<TodoItem>> DeleteTodoItem( long id )
+    public async Task<IEnumerable<TodoItem>> DeleteTodoItem( TodoItem todoItem )
     {
+        var response = await httpClient.DeleteAsync(endPoint + "/" + todoItem.Id);
         return await GetTodoItems();
     }
 
     public async Task<IEnumerable<TodoItem>> SetTodoItem( TodoItem todoItem )
     {
-        return await GetTodoItems();
-    }
-
-    public async Task<IEnumerable<TodoItem>> CompleteTodoItem( long id )
-    {
+        todoItem.IsComplete = !todoItem.IsComplete;
+        var response = await httpClient.PutAsJsonAsync(endPoint + "/" + todoItem.Id, todoItem);
         return await GetTodoItems();
     }
 }
