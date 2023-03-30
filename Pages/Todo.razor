@@ -21,7 +21,6 @@
     </ul>
 </div>
 
-
 @code {
 
     private List<TodoItem> todoItems = new List<TodoItem>();
@@ -31,60 +30,40 @@
     private bool shouldRender;
     protected override bool ShouldRender() => shouldRender;
 
+    // this is run a tthe start of the page
     protected override async Task OnInitializedAsync()
     {
-        var itemList = (await todoItemService.GetTodoItems()).ToList();
-
-        if (itemList == null)
-            todoItems.Clear();
-        else
-            todoItems = itemList;
+        // getting the list of items
+        todoItems = (await todoItemService.GetTodoItems()).ToList();
 
         shouldRender = true;
     }
 
+    // adds an item
     private async Task AddTodoItem()
     {
+        // creates the new TodoItem
         TodoItem newTodoItem = new TodoItem();
         newTodoItem.Name = newTodo;
         newTodoItem.IsComplete = false;
 
-        var itemList = (await todoItemService.AddTodoItem(newTodoItem)).ToList();
-
-        if (itemList == null)
-            todoItems.Clear();
-        else
-            todoItems = itemList;
-
+        // asks service to add the TodoItem, and gets the list of items
+        todoItems = (await todoItemService.AddTodoItem(newTodoItem)).ToList();
     }
 
     private async Task DeleteTodoItem(TodoItem todoItem)
     {
-        TodoItem newTodoItem = new TodoItem();
-        newTodoItem.Name = newTodo;
-        newTodoItem.IsComplete = false;
-
-        var itemList = (await todoItemService.DeleteTodoItem(todoItem)).ToList();
-
-        if (itemList == null)
-            todoItems.Clear();
-        else
-            todoItems = itemList;
+        // asks service to delete the TodoItem, and gets the list of items
+        todoItems = (await todoItemService.DeleteTodoItem(todoItem)).ToList();
     }
 
         private async Task ToggleTodoItem(TodoItem todoItem)
     {
-        TodoItem newTodoItem = new TodoItem();
-        newTodoItem.Name = newTodo;
-        newTodoItem.IsComplete = false;
+        // toggles the ISComplete boolean
+        todoItem.IsComplete = !todoItem.IsComplete;
 
-        var itemList = (await todoItemService.SetTodoItem(todoItem)).ToList();
-
-        if (itemList == null)
-            todoItems.Clear();
-        else
-            todoItems = itemList;
-
+        // asks service to replace the TodoItem, and gets the list of items
+        todoItems = (await todoItemService.SetTodoItem(todoItem)).ToList();
     }
     
 }

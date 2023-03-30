@@ -4,7 +4,7 @@ using Microsoft.Net.Http.Headers;
 using BlazorApp.Data;
 using TodoItemManagement;
 
-
+// specifies the URI to the base of the api, so before the path before api/todoitems
 const string baseAddress = "http://localhost:5097/";
 //const string baseAddress =  "https://appservice.azurewebsites.net/";
 
@@ -15,7 +15,8 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 
-// creates data service for todo items
+// creates data service for todo items using the IHttpClientFactory
+// it uses the interface and class defined for the TodoItemService located in /Data
 builder.Services.AddHttpClient<ITodoItemService,TodoItemService>("todoAPI", httpClient =>
 {
     httpClient.BaseAddress = new Uri(baseAddress);
