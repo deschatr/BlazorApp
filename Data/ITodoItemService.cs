@@ -1,7 +1,7 @@
 public interface ITodoItemService
 {
     Task<IEnumerable<TodoItem>> GetTodoItems();
-    Task<IEnumerable<TodoItem>> AddTodoItem(TodoItem todoItem);
-    Task<IEnumerable<TodoItem>> DeleteTodoItem(TodoItem todoItem);
-    Task<IEnumerable<TodoItem>> SetTodoItem( TodoItem todoItem );
+    Task<bool> AddTodoItem(TodoItem todoItem);
+    Task<bool> DeleteTodoItem(TodoItem todoItem);
+    Task<bool> SetTodoItem( TodoItem todoItem );
 }

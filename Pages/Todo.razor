@@ -48,15 +48,29 @@
         newTodoItem.IsComplete = false;
 
         // asks service to add the TodoItem, and gets the list of items
-        todoItems = (await todoItemService.AddTodoItem(newTodoItem)).ToList();
-        // maybe better to separate into 2 methods 1. Add 2. Get
+        if (await todoItemService.AddTodoItem(newTodoItem))
+        {
+            todoItems = (await todoItemService.GetTodoItems()).ToList();
+        }
+        else
+        {
+            // display an error message
+            Console.WriteLine("Adding the item failed...");
+        }
     }
 
     private async Task DeleteTodoItem(TodoItem todoItem)
     {
         // asks service to delete the TodoItem, and gets the list of items
-        todoItems = (await todoItemService.DeleteTodoItem(todoItem)).ToList();
-        // maybe better to separate into 2 methods 1. Delete 2. Get
+        if (await todoItemService.DeleteTodoItem(todoItem))
+        {
+            todoItems = (await todoItemService.GetTodoItems()).ToList();
+        }
+        else
+        {
+            // display an error message
+            Console.WriteLine("Deleting the item failed...");
+        }
     }
 
         private async Task ToggleTodoItem(TodoItem todoItem)
@@ -65,8 +79,15 @@
         todoItem.IsComplete = !todoItem.IsComplete;
 
         // asks service to replace the TodoItem, and gets the list of items
-        todoItems = (await todoItemService.SetTodoItem(todoItem)).ToList();
-        // maybe better to separate into 2 methods 1. Set 2. Get
+        if (await todoItemService.SetTodoItem(todoItem))
+        {
+            todoItems = (await todoItemService.GetTodoItems()).ToList();
+        }
+        else
+        {
+            // display an error message
+            Console.WriteLine("Toggling the item failed...");
+        }
     }
     
 }

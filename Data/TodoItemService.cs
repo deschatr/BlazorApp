@@ -34,46 +34,53 @@ public class TodoItemService : ITodoItemService
 
     // adds an item and returns the list of items
     // the list of items is fetched from the API, so that the synchronisation is garanteed
-    public async Task<IEnumerable<TodoItem>> AddTodoItem( TodoItem todoItem )
+    public async Task<bool> AddTodoItem( TodoItem todoItem )
     {
+        bool isSuccessStatusCode = false;
         try
         {
             var response = await httpClient.PostAsJsonAsync<TodoItem>(endPoint, todoItem);
+            isSuccessStatusCode = response.IsSuccessStatusCode;
         }
         catch (HttpRequestException e)
         {
             System.Console.WriteLine("!!! AddTodoItems EXCEPTION !!! " + e.GetType().ToString() + ": " + e.Message);
         }
-        return await GetTodoItems();
+        return isSuccessStatusCode;
     }
 
     // deletes an item, and returns the list of items
     // the list of items is fetched from the API, so that the synchronisation is garanteed
-    public async Task<IEnumerable<TodoItem>> DeleteTodoItem( TodoItem todoItem )
+    public async Task<bool> DeleteTodoItem( TodoItem todoItem )
     {
+        bool isSuccessStatusCode = false;
         try
         {
             var response = await httpClient.DeleteAsync(endPoint + "/" + todoItem.Id);
+            isSuccessStatusCode = response.IsSuccessStatusCode;
+
         }
         catch (HttpRequestException e)
         {
             System.Console.WriteLine("!!! DeleteTodoItems EXCEPTION !!! " + e.GetType().ToString() + ": " + e.Message);
         }
-        return await GetTodoItems();
+        return isSuccessStatusCode;
     }
 
     // replaces an item, and returns the list of items
     // the list of items is fetched from the API, so that the synchronisation is garanteed
-    public async Task<IEnumerable<TodoItem>> SetTodoItem( TodoItem todoItem )
+    public async Task<bool> SetTodoItem( TodoItem todoItem )
     {
+        bool isSuccessStatusCode = false;
         try
         {
             var response = await httpClient.PutAsJsonAsync(endPoint + "/" + todoItem.Id, todoItem);
+            isSuccessStatusCode = response.IsSuccessStatusCode;
         }
         catch (HttpRequestException e)
         {
             System.Console.WriteLine("!!! PutTodoItems EXCEPTION !!! " + e.GetType().ToString() + ": " + e.Message);
         }
-        return await GetTodoItems();
+        return isSuccessStatusCode;
     }
 }
