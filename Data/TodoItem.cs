@@ -1,6 +1,4 @@
-using System.Text.Json.Serialization;
-
-// defines the TodoItem class, and associated JSON attributes
+// defines the TodoItem class
 public class TodoItem
 {
     public long Id { get; set; }
